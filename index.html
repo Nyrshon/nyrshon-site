@@ -4,93 +4,25 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Nyrshon</title>
-
-    <!-- ✅ Custom favicon -->
-    <link rel="icon" type="image/png" href="favicon.png" />
-
+    <link rel="icon" type="image/png" href="/favicon.png" />
     <style>
-      html, body {
+      body {
         margin: 0;
-        padding: 0;
-        height: 100%;
-        overflow: hidden;
-        background-color: #000;
+        height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: black;
+        color: white;
+        font-family: "Inter", sans-serif;
       }
-
-      iframe {
-        border: none;
-        width: 100%;
-        height: 100%;
-      }
-
-      /* ✅ Overlays to block any unwanted buttons or floating Framer UI */
-      .hide-footer {
-        position: fixed;
-        bottom: 0;
-        left: 0;
-        width: 100%;
-        height: 120px;
-        background: transparent;
-        pointer-events: none;
-        z-index: 9999;
-      }
-
-      .hide-top-right {
-        position: fixed;
-        top: 0;
-        right: 0;
-        width: 220px;
-        height: 160px;
-        background: transparent;
-        pointer-events: none;
-        z-index: 9999;
+      .loader {
+        font-size: 1.2rem;
+        opacity: 0.8;
       }
     </style>
   </head>
   <body>
-    <!-- ✅ Embed your Framer project -->
-    <iframe
-      id="nyrshonFrame"
-      src="https://exciting-shape-432647.framer.app"
-      title="Nyrshon Website"
-      allowfullscreen
-    ></iframe>
-
-    <!-- ✅ Transparent overlays (backup visual blockers) -->
-    <div class="hide-footer"></div>
-    <div class="hide-top-right"></div>
-
-    <script>
-      // ✅ Attempts to remove unwanted Framer elements by class names
-      function removeFramerElements() {
-        try {
-          const iframeDoc = document.getElementById("nyrshonFrame").contentWindow.document;
-
-          // 1️⃣ Hide "Use for Free" button or Framer promo
-          const useForFree = iframeDoc.querySelectorAll('[data-framer-name="Primary"], a[href*="framer.link"]');
-          useForFree.forEach(el => (el.style.display = "none"));
-
-          // 2️⃣ Hide floating Framer bubble divs
-          const floatingDivs = iframeDoc.querySelectorAll('.framer-pointer-events-none, .framer-IYKYh, .framer-17vtrtf');
-          floatingDivs.forEach(el => (el.style.display = "none"));
-
-          // 3️⃣ Hide any links pointing to Framer or Twitter
-          const allLinks = iframeDoc.querySelectorAll("a");
-          allLinks.forEach(a => {
-            if (/framer\.com|twitter\.com/i.test(a.href)) {
-              a.style.display = "none";
-            }
-          });
-
-        } catch (err) {
-          // Usually blocked by CORS — that's fine; overlays still handle it visually
-        }
-      }
-
-      // Run after iframe loads
-      document.getElementById("nyrshonFrame").addEventListener("load", () => {
-        setTimeout(removeFramerElements, 3000);
-      });
-    </script>
+    <div class="loader">Loading Nyrshon...</div>
   </body>
 </html>
