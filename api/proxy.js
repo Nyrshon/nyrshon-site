@@ -4,22 +4,22 @@ export default async function handler(req, res) {
     const response = await fetch(target);
     let html = await response.text();
 
-    // Remove every Framer promo / UI element we can find
+    // --- Remove promo UI but KEEP main framer runtime ---
     html = html
+      // remove "Use for Free", "Remix", "Made with Framer" texts
       .replace(/Use for Free/gi, "")
       .replace(/Remix/gi, "")
       .replace(/Made with Framer/gi, "")
-      .replace(/twitter\.com/gi, "")
-      // remove any a-tags that link to framer
-      .replace(/<a[^>]*(framer\.com|framer\.link)[^>]*>[\s\S]*?<\/a>/gi, "")
-      // remove floating divs Framer uses
-      .replace(/<div[^>]*framer-[^>]*>[\s\S]*?<\/div>/gi, "")
-      // ⚡️ remove script tags that pull in editor UI
-      .replace(/<script[^>]*(framer\.com|framerstatic|framerapp)[^>]*>[\s\S]*?<\/script>/gi, "")
-      // ⚡️ remove inline scripts that mention "framer"
-      .replace(/<script[^>]*>[\s\S]*?framer[\s\S]*?<\/script>/gi, "");
+      // remove anchor tags linking to Framer or Twitter
+      .replace(/<a[^>]*(framer\.com|framer\.link|twitter\.com)[^>]*>[\s\S]*?<\/a>/gi, "")
+      // remove floating divs that contain those buttons
+      .replace(/<div[^>]*class="[^"]*framer-[^"]*(IYKYh|17vtrtf|pointer-events-none)[^"]*"[^>]*>[\s\S]*?<\/div>/gi, "")
+      // remove only the known editor / overlay scripts
+      .replace(/<script[^>]*editor-bundle[^>]*>[\s\S]*?<\/script>/gi, "")
+      .replace(/<script[^>]*framer\.com\/editor[^>]*>[\s\S]*?<\/script>/gi, "")
+      .replace(/<script[^>]*remix-controls[^>]*>[\s\S]*?<\/script>/gi, "");
 
-    // Inject your favicon
+    // Inject favicon
     html = html.replace(
       "</head>",
       `<link rel="icon" type="image/png" href="/favicon.png" /></head>`
