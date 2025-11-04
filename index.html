@@ -6,6 +6,11 @@
     <title>Nyrshon</title>
     <link rel="icon" type="image/png" href="/favicon.png" />
     <style>
+      @keyframes pulse {
+        0%, 100% { opacity: 0.4; }
+        50% { opacity: 1; }
+      }
+
       body {
         margin: 0;
         height: 100vh;
@@ -15,14 +20,13 @@
         background: black;
         color: white;
         font-family: "Inter", sans-serif;
-      }
-      .loader {
-        font-size: 1.2rem;
-        opacity: 0.8;
+        font-size: 1.1rem;
+        letter-spacing: 0.5px;
+        animation: pulse 2s infinite ease-in-out;
       }
     </style>
   </head>
   <body>
-    <div class="loader">Loading Nyrshon...</div>
+    Loading Nyrshon...
   </body>
 </html>
