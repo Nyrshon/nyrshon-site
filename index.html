@@ -81,9 +81,35 @@
   </style>
 </head>
 <body>
+  <!-- Updated iframe with sandbox and ID -->
   <iframe 
-    src="https://nyrshon.framer.website" 
-    title="Nyrshon Website">
+    id="nyrshon-site"
+    src="https://nyrshon.framer.website"
+    title="Nyrshon Website"
+    sandbox="allow-same-origin allow-scripts allow-popups allow-top-navigation-by-user-activation"
+    style="border:none; width:100%; height:100vh;">
   </iframe>
+
+  <!-- Script to force all external links inside iframe to open in new tab -->
+  <script>
+    const iframe = document.getElementById('nyrshon-site');
+
+    iframe.addEventListener('load', () => {
+      try {
+        const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+
+        // Monitor clicks inside iframe
+        iframeDoc.addEventListener('click', (event) => {
+          const target = event.target.closest('a');
+          if (target && target.href && !target.href.includes('nyrshon.framer.website')) {
+            event.preventDefault();
+            window.open(target.href, '_blank');
+          }
+        });
+      } catch (err) {
+        console.warn("Cross-domain security prevents direct access. Using popup fallback.");
+      }
+    });
+  </script>
 </body>
 </html>
