@@ -78,6 +78,26 @@
       width: 100%;
       height: 100%;
     }
+
+    /* Notice bar (only shows if needed) */
+    #form-warning {
+      display: none;
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+      background: rgba(0,0,0,0.85);
+      color: #fff;
+      text-align: center;
+      padding: 10px;
+      font-family: Arial, sans-serif;
+      font-size: 14px;
+      z-index: 9999;
+    }
+    #form-warning a {
+      color: #00bfff;
+      text-decoration: none;
+      font-weight: 600;
+    }
   </style>
 </head>
 <body>
@@ -86,18 +106,28 @@
     id="nyrshon-site"
     src="https://nyrshon.framer.website?framer-preview=1"
     title="Nyrshon Website"
-    sandbox="allow-same-origin allow-scripts allow-popups allow-popups-to-escape-sandbox allow-top-navigation allow-top-navigation-by-user-activation"
+    sandbox="allow-same-origin allow-scripts allow-popups allow-forms allow-popups-to-escape-sandbox allow-top-navigation allow-top-navigation-by-user-activation"
+    allow="fullscreen; clipboard-read; clipboard-write; forms; autoplay"
     style="border:none; width:100%; height:100vh;">
   </iframe>
 
-  <!-- Updated script: forces external links to open in new tabs -->
+  <!-- Auto Fallback Notice -->
+  <div id="form-warning">
+    ⚠️ If the form doesn’t load or submit properly, 
+    <a href="https://nyrshon.framer.website" target="_blank">open full version here</a>.
+  </div>
+
+  <!-- Updated script: forces external links to open in new tabs and adds fallback handling -->
   <script>
     const iframe = document.getElementById('nyrshon-site');
+    const fallbackNotice = document.getElementById('form-warning');
 
     // Add listener for clicks inside iframe
     iframe.addEventListener('load', () => {
       try {
         const iframeWindow = iframe.contentWindow;
+
+        // Monitor clicks for external links
         iframeWindow.addEventListener('click', (e) => {
           const target = e.target?.closest('a');
           if (target && target.href && !target.href.includes('nyrshon.framer.website')) {
@@ -105,8 +135,24 @@
             window.open(target.href, '_blank');
           }
         });
+
+        // Detect form elements for submission issues
+        const iframeDoc = iframeWindow.document;
+        const forms = iframeDoc.querySelectorAll('form');
+        forms.forEach(form => {
+          form.addEventListener('submit', (ev) => {
+            // If form submission gets blocked or fails, show fallback notice
+            setTimeout(() => {
+              if (!iframeDoc.readyState || iframeDoc.readyState === 'loading') {
+                fallbackNotice.style.display = 'block';
+              }
+            }, 3000);
+          });
+        });
       } catch (err) {
-        console.warn("Cross-origin restriction active, enabling popup fallback.");
+        console.warn("Cross-origin restriction active, enabling fallback notice.");
+        // Display notice if we can't access iframe (sandboxed cross-origin)
+        setTimeout(() => { fallbackNotice.style.display = 'block'; }, 5000);
       }
     });
 
